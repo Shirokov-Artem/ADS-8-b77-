@@ -7,17 +7,19 @@ Train::Train() {
 }
 
 void Train::addCage(bool light) {
-    Cage* newCage = new Cage;
-    newCage->light = light;
     if (first == nullptr) {
-        newCage->next = newCage;
-        newCage->prev = newCage;
-        first = newCage;
+        first = new Cage;
+        first->next = first;
+        first->prev = first;
+        first->light = light;
     } else {
-        newCage->next = first;
-        newCage->prev = first->prev;
-        first->prev->next = newCage;
-        first->prev = newCage;
+        Cage* last = first->prev;
+        last->next = new Cage;
+        last->next->prev = last;
+        last = last->next;
+        last->next = first;
+        first->prev = last;
+        last->light = light;
     }
 }
 
