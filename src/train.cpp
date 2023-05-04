@@ -14,6 +14,12 @@ void Train::addCage(bool light) {
     first = newCage;
     newCage->next = first;
     newCage->prev = first;
+  } else if (first->next == first) {
+    Cage *last = first;
+    last->next = newCage;
+    newCage->prev = last;
+    newCage->next = last;
+    first->prev = newCage;
   } else {
     Cage *last = first->prev;
     last->next = newCage;
