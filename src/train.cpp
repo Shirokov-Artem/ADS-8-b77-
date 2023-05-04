@@ -14,22 +14,21 @@ void Train::addCage(bool light) {
     first->next = first;
     first->prev = first;
   } else {
-    newCage->next = first;
     newCage->prev = first->prev;
+    newCage->next = first;
     first->prev->next = newCage;
     first->prev = newCage;
   }
 }
 
 int Train::getLength() {
-  if (first == nullptr) {
-    return 0;
-  }
-  int length = 1;
-  Cage *currentCage = first->next;
-  while (currentCage != first) {
-    length++;
-    currentCage = currentCage->next;
+  int length = 0;
+  if (first != nullptr) {
+    Cage *currentCage = first;
+    do {
+      length++;
+      currentCage = currentCage->next;
+    } while (currentCage != first);
   }
   return length;
 }
