@@ -28,6 +28,7 @@ int Train::getLength() {
             cur = cur->next;
         } while (cur != first);
     }
+
     return length;
 }
 
