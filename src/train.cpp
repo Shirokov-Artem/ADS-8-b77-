@@ -6,13 +6,13 @@ Train::Train() {
   countOp = 0;
 }
 
-void Train::addCage(bool isLightOn) {
+void Train::addCage(bool light) {
     if (first == nullptr) {
-        first = new Cage(isLightOn);
+        first = new Cage(light);
         first->next = first;
         first->prev = first;
     } else {
-        Cage* newCage = new Cage(isLightOn);
+        Cage* newCage = new Cage(light);
         Cage* lastCage = first->prev;
         lastCage->next = newCage;
         newCage->prev = lastCage;
