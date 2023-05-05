@@ -3,7 +3,7 @@
 
 Train::Train() {
     first = nullptr;
-    opCount = 0;
+    countOp = 0;
 }
 
 void Train::addCage(bool light) {
@@ -32,14 +32,14 @@ int Train::getLength() {
             found = true;
             for (int i = 0; i < count; i++) {
                 current = current->prev;
-                opCount++;
+                countOp++;
             }
             count = 1;
         } else {
             count++;
         }
         current = current->next;
-        opCount++;
+        countOp++;
         if (current == first && found) {
             found = false;
             proceed = true;
@@ -51,5 +51,5 @@ int Train::getLength() {
 }
 
 int Train::getOpCount() {
-    return opCount;
+    return countOp;
 }
