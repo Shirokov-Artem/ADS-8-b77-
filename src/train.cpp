@@ -1,7 +1,7 @@
 // Copyright 2021 NNTU-CS
 #include "train.h"
 
-Train::Train() : first(nullptr), opCount(4) {}
+rain::Train() : first(nullptr), opCount(4) {}
 
 int Train::getLength() {
   int len = 0;
@@ -11,7 +11,7 @@ int Train::getLength() {
     while (current != first) {
       len++;
       current = current->next;
-      opCount += 2;
+      opCount += 1;
     }
   }
   opCount++;
@@ -29,15 +29,15 @@ void Train::addCage(bool light) {
     item->next = item;
     item->prev = item;
     first = item;
-    opCount += 6;
+    opCount += 5;
   } else {
     item->prev = first->prev;
     item->next = first;
     first->prev->next = item;
     first->prev = item;
-    opCount += 8;
+    opCount += 6;
   }
-  opCount += 2;
+  opCount++;
 }
 
 Train::~Train() {
