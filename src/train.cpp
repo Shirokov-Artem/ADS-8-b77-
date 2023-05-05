@@ -30,6 +30,7 @@ int Train::getLength() {
   do {
     length++;
     current = current->next;
+    countOp++;
   } while (current != first);
   return length;
 }
