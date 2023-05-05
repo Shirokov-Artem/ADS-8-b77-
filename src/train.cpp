@@ -1,68 +1,55 @@
 // Copyright 2021 NNTU-CS
 #include "train.h"
 
-Train::Train() : countOp(0), first(nullptr) {}
+Train::Train() {
+    first = nullptr;
+    opCount = 0;
+}
 
 void Train::addCage(bool light) {
-    Cage* newCage = new Cage;
+    Cage* newCage = new Cage();
     newCage->light = light;
-    newCage->next = nullptr;
-    if (first == nullptr) {
+    if (!first) {
         first = newCage;
+        first->next = first;
     } else {
-        Cage* curCage = first;
-        while (curCage->next != nullptr) {
-            curCage = curCage->next;
-        }
-        curCage->next = newCage;
-        newCage->prev = curCage;
+        Cage* last = first->prev;
+        last->next = newCage;
+        newCage->prev = last;
+        newCage->next = first;
+        first->prev = newCage;
     }
 }
 
 int Train::getLength() {
-    Cage* curCage = first;
-    int length = 0;
-    bool isMovL = false;
-    while (curCage != nullptr) {
-        ++length;
-        if (isMovL) {
-            curCage = curCage->prev;
+    int count = 0;
+    Cage* current = first;
+    bool found = false;
+    bool proceed = true;
+    while (proceed) {
+        if (current->light) {
+            current->light = false;
+            found = true;
+            for (int i = 0; i < count; i++) {
+                current = current->prev;
+                opCount++;
+            }
+            count = 1;
         } else {
-            curCage = curCage->next;
+            count++;
         }
-        if (curCage != nullptr) {
-            if (curCage->light) {
-                if (isMovL) {
-                    if (curCage->prev != nullptr) {
-                        curCage = curCage->prev->prev;
-                    } else {
-                        curCage = nullptr;
-                    }
-                } else {
-                    if (curCage->next != nullptr) {
-                        curCage = curCage->next->next;
-                    } else {
-                        curCage = nullptr;
-                    }
-                }
-                isMovL = !isMovL;
-                if (curCage != nullptr) {
-                    countOp += length;
-                    length = 0;
-                }
-            }
-        } else {
-            isMovL = true;
-            curCage = first->prev;
-            if (curCage != nullptr) {
-                countOp += length * 2;
-                length = 0;
-            }
+        current = current->next;
+        opCount++;
+        if (current == first && found) {
+            found = false;
+            proceed = true;
+        } else if (current == first && !found) {
+            proceed = false;
         }
     }
-    return length;
+    return count;
 }
 
 int Train::getOpCount() {
-    return countOp;
+    return opCount;
 }
