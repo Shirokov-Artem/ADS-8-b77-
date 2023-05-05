@@ -16,5 +16,15 @@ class Train {
   void addCage(bool light); // добавить вагон с начальным состоянием лампочки
   int getLength();          // вычислить длину поезда
   int getOpCount();         // вернуть число переходов (из вагона в вагон)
+  Train::~Train() {
+    if (first != nullptr) {
+        Cage* cur = first;
+        do {
+            Cage* temp = cur->next;
+            delete cur;
+            cur = temp;
+        } while (cur != first);
+    }
+  }
 };
 #endif  // INCLUDE_TRAIN_H_
