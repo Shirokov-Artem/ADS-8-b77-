@@ -3,23 +3,6 @@
 
 Train::Train() : opCount(0), first(nullptr) {}
 
-void Train::addCage(bool light) {
-  Cage* item = new Cage;
-  item->light = light;
-  if (!first) {
-    item->next = item;
-    item->prev = item;
-  } else {
-    item->next = first;
-    item->prev = first->prev;
-    first->prev->next = item;
-    first->prev = item;
-    opCount += 4;
-  }
-  first = item;
-  opCount += 2;
-}
-
 int Train::getLength() {
   int len = 0;
   if (first) {
@@ -37,6 +20,24 @@ int Train::getLength() {
 
 int Train::getOpCount() {
   return opCount;
+}
+
+void Train::addCage(bool light) {
+  Cage* item = new Cage;
+  item->light = light;
+  if (!first) {
+    item->next = item;
+    item->prev = item;
+    first = item;
+    opCount += 2;
+  } else {
+    item->next = first;
+    item->prev = first->prev;
+    first->prev->next = item;
+    first->prev = item;
+    opCount += 4;
+  }
+  opCount += 2;
 }
 
 Train::~Train() {
