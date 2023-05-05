@@ -18,7 +18,16 @@ int Train::getLength() {
 }
 
 int Train::getOpCount() {
-  return opCount;
+  int op = opCount;
+  if (first) {
+    op += 6;
+    Cage* current = first->next;
+    while (current != first) {
+      op += 4;
+      current = current->next;
+    }
+  }
+  return op;
 }
 
 void Train::addCage(bool light) {
