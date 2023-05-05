@@ -1,7 +1,7 @@
 // Copyright 2021 NNTU-CS
 #include "train.h"
 
-rain::Train() : first(nullptr), opCount(4) {}
+Train::Train() : first(nullptr), opCount(4) {}
 
 int Train::getLength() {
   int len = 0;
