@@ -15,6 +15,7 @@ void Train::addCage(bool light) {
             curCage = curCage->next;
         }
         curCage->next = newCage;
+        newCage->prev = curCage;
     }
 }
 
