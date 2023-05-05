@@ -37,11 +37,12 @@ int Train::getOpCount() {
       return 0;
   }
   int nSwitch = 0;
+  bool fLight = first->light;
   Cage* currentCage = first->next;
   do {
-      if (currentCage->light != currentCage->prev->light)
-          nSwitch++;
-      currentCage = currentCage->next;
-  } while (currentCage != first->next);
-  return getLength() + nSwitch;
+    if (currentCage->light != currentCage->prev->light)
+      nSwitch++;
+    currentCage = currentCage->next;
+  } while (currentCage != first);
+  return getLength() + (nSwitch - (first->light != fLight));
 }
