@@ -3,61 +3,40 @@
 
 Train::Train() : opCount(0), first(nullptr) {}
 
+Train::~Train() {
+  while (first) {
+    Cage* item = first;
+    first = first->next;
+    delete item;
+  }
+}
+
 void Train::addCage(bool light) {
   Cage* item = new Cage;
   item->light = light;
-  item->next = first;
-  item->prev = first ? first->prev : item;
-  if (first) {
-    item->prev->next = item;
-    first->prev = item;
+  if (!first) {
+    item->next = item;
+    item->prev = item;
   } else {
-    first = item;
+    item->next = first;
+    item->prev = first->prev;
+    first->prev->next = item;
     first->prev = item;
   }
-  this->opCount += 4;
+  first = item;
+  opCount += 4;
 }
 
 int Train::getLength() {
-  Cage* temp = first;
-  temp->light = true;
-  int count = 1;
-  int opCount = 0;
-  while (true) {
-    temp = temp->next;
-    if (temp->light == false) {
-      count++;
-      opCount++;
-    } else {
-      temp->light = false;
-      opCount++;
-
-      Cage* temp2 = temp->prev;
-      int count2 = 1;
-      while (true) {
-        temp2->light = true;
-        opCount++;
-        if (temp2 == first) {
-          break;
-        }
-        temp2 = temp2->prev;
-        count2++;
-      }
-      count = count2;
-
-      if (temp->light == false) {
-        return count;
-      } else {
-        count = 1;
-      }
-    }
+  Cage* current = first;
+  int count = 0;
+  while (current) {
+    count++;
+    current = current->next;
   }
+  return count;
 }
 
 int Train::getOpCount() {
-  int count = 0;
-  getLength();
-  count = opCount;
-  opCount = 0;
-  return count;
+  return opCount;
 }
