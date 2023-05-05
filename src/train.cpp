@@ -28,7 +28,6 @@ int Train::getLength() {
             cur = cur->next;
         } while (cur != first);
     }
-
     return length;
 }
 
@@ -53,4 +52,15 @@ int Train::getOpCount() {
     }
     countOp = opCount;
     return opCount;
+}
+
+Train::~Train() {
+    if (first != nullptr) {
+        Cage* cur = first;
+        do {
+            Cage* temp = cur->next;
+            delete cur;
+            cur = temp;
+        } while (cur != first);
+    }
 }
