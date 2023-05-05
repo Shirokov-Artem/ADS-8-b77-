@@ -4,64 +4,59 @@
 Train::Train() : countOp(0), first(nullptr) {}
 
 void Train::addCage(bool light) {
-    Cage* newCage = new Cage;
-    newCage->light = light;
-    if (first == nullptr) {
-        first = newCage;
-        newCage->next = first;
-        newCage->prev = first;
-    } else {
-        newCage->next = first;
-        newCage->prev = first->prev;
-        first->prev->next = newCage;
-        first->prev = newCage;
-        first = newCage;
-    }
+  Cage* item = new Cage;
+  item->light = light;
+  item->next = first;
+  item->prev = first ? first->prev : item;
+  if (first) {
+    item->prev->next = item;
+    first->prev = item;
+  } else {
+    first = item;
+  }
+  opCount += 4;
 }
 
 int Train::getLength() {
-    int length = 0;
-    if (first != nullptr) {
-        Cage* cur = first;
-        do {
-            length++;
-            cur = cur->next;
-        } while (cur != first);
+  Cage* temp = first;
+  temp->light = true;
+  int count = 1;
+  int opCount = 0;
+  while (true) {
+    temp = temp->next;
+    if (temp->light == false) {
+      count++;
+      opCount++;
+    } else {
+      temp->light = false;
+      opCount++;
+
+      Cage* temp2 = temp->prev;
+      int count2 = 1;
+      while (true) {
+        temp2->light = true;
+        opCount++;
+        if (temp2 == first) {
+          break;
+        }
+        temp2 = temp2->prev;
+        count2++;
+      }
+      count = count2;
+
+      if (temp->light == false) {
+        return count;
+      } else {
+        count = 1;
+      }
     }
-    return length;
+  }
 }
 
 int Train::getOpCount() {
-    int opCounter = 0;
-    if (first != nullptr) {
-        Cage* cur = first;
-        opCounter++;
-        do {
-            if (cur->light == true) {
-                cur->light = false;
-                opCounter += 2;
-                Cage* temp = cur->next;
-                while (temp != cur) {
-                    temp->light = !temp->light;
-                    opCounter++;
-                    temp = temp->next;
-                }
-            }
-            cur = cur->next;
-            opCounter++;
-        } while (cur != first);
-    }
-    countOp = opCounter;
-    return opCounter;
-}
-
-Train::~Train() {
-    if (first != nullptr) {
-        Cage* cur = first;
-        do {
-            Cage* temp = cur->next;
-            delete cur;
-            cur = temp;
-        } while (cur != first);
-    }
+  int count = 0;
+  getLength();
+  count = countOp;
+  countOp = 0;
+  return count;
 }
