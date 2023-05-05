@@ -1,63 +1,53 @@
 // Copyright 2021 NNTU-CS
 #include "train.h"
 
-Train::Train() : opCount(0), first(nullptr) {}
+Train::Train() {
+    first = nullptr;
+    countOp = 0;
+}
 
 void Train::addCage(bool light) {
-  Cage* cage = new Cage;
-  cage->light = light;
-  if (first == nullptr) {
-    first = cage;
-    first->next = cage;
-    first->prev = cage;
-  } else {
-    cage->next = first;
-    cage->prev = first->prev;
-    first->prev->next = cage;
-    first->prev = cage;
-  }
-  opCount++;
+    Cage *cage = new Cage{light, nullptr, nullptr};
+    if (first == nullptr) {
+        first = cage;
+        first->next = first;
+        first->prev = first;
+    } else {
+        Cage *last = first->prev;
+        last->next = cage;
+        cage->prev = last;
+        cage->next = first;
+        first->prev = cage;
+    }
 }
 
 int Train::getLength() {
-  if (first == nullptr) {
-    return 0;
-  } else {
-    Cage* current = first;
-    int len = 1;
-    while (current->next != first) {
-      current = current->next;
-      len++;
-    }
-    return len;
-  }
+    if (first == nullptr)
+        return 0;
+    Cage *curr = first;
+    int length = 0;
+    do {
+        curr = curr->next;
+        length++;
+    } while (curr != first);
+
+    return length;
 }
 
 int Train::getOpCount() {
-  if (first == nullptr) {
-    return 0;
-  } else {
-    Cage* current = first;
-    int opCount = 0;
+    if (first == nullptr)
+        return 0;
+    Cage *curr = first;
+    bool prevLight = curr->light;
+    curr = curr->next;
+    int opCount = 1;
     do {
-      if (current->light && current->next->light) {
+        if (curr->light != prevLight) {
+            opCount++;
+            prevLight = curr->light;
+        }
+        curr = curr->next;
         opCount++;
-        current = current->next;
-      }
-      current = current->next;
-    } while (current != first);
+    } while (curr != first);
     return opCount;
-  }
-}
-
-Train::~Train() {
-  if (first != nullptr) {
-    Cage* current = first;
-    do {
-      Cage* next = current->next;
-      delete current;
-      current = next;
-      opCount++;
-    } while (current != first);
-  }
 }
