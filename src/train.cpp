@@ -37,6 +37,9 @@ void Train::addCage(bool light) {
     first->prev = item;
     opCount += 4;
   }
+  if (getLength() == 1) {
+    opCount += 2;
+  }
   opCount += 3;
 }
 
