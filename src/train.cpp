@@ -6,18 +6,17 @@ Train::Train() {
   countOp = 0;
 }
 
-void Train::addCage(bool light) {
-    Cage* newCage = new Cage;
-    newCage->light = light;
+void Train::addCage(bool isLightOn) {
     if (first == nullptr) {
-        newCage->next = newCage;
-        newCage->prev = newCage;
-        first = newCage;
+        first = new Cage(isLightOn);
+        first->next = first;
+        first->prev = first;
     } else {
+        Cage* newCage = new Cage(isLightOn);
         Cage* lastCage = first->prev;
         lastCage->next = newCage;
-        newCage->next = first;
         newCage->prev = lastCage;
+        newCage->next = first;
         first->prev = newCage;
     }
 }
@@ -41,16 +40,17 @@ int Train::getOpCount() {
         return 0;
     }
     Cage* currentCage = first->next;
-    int count = 2;
+    int opCount = 2;
     while (currentCage != first) {
         if (!currentCage->light) {
-            countOp += count;
+            opCount += 2;
             currentCage->light = true;
-            count = 2;
         }
-        count++;
+        opCount++;
         currentCage = currentCage->next;
     }
-    countOp += count;
-    return countOp;
+    if (!first->light) {
+        opCount += 2;
+    }
+    return opCount;
 }
