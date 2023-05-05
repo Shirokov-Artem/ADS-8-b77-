@@ -9,54 +9,54 @@ Train::Train() {
 void Train::addCage(bool light) {
     Cage* newCage = new Cage();
     newCage->light = light;
-    if (!first) {
+    if (first == nullptr) {
+        newCage->next = newCage;
+        newCage->prev = newCage;
         first = newCage;
-        first->next = first;
-        first->prev = first;
     } else {
-        Cage* last = first->prev;
-        newCage->prev = last;
         newCage->next = first;
-        last->next = newCage;
+        newCage->prev = first->prev;
+        first->prev->next = newCage;
         first->prev = newCage;
     }
 }
 
 int Train::getLength() {
-    int count = 0;
+    int length = 0;
+    bool drop = false;
     Cage* current = first;
-    bool found = false;
-    bool proceed = true;
-    while (proceed) {
+    Cage* last = current->prev;
+    while (current != first || !drop) {
         if (current->light) {
-            current->light = false;
-            found = true;
-            if (count > 1) {
-                for (int i = 0; i < count-1; i++) {
-                    current = current->prev;
-                    if (current == nullptr) {
-                        return 0;
-                    }
+            if (length > 1) {
+                for (int i = 0; i < length - 1; i++) {
+                    last = last->prev;
                     countOp++;
                 }
+                last->next = current->next;
+                current->next->prev = last;
+                Cage* temp = current->next;
+                delete current;
+                current = temp;
+                length = 1;
+                drop = false;
+            } else {
+                drop = true;
+                current = current->next;
             }
-            count = 1;
         } else {
-            count++;
-        }
-        current = current->next;
-        if (current == nullptr) {
-            return 0;
+            length++;
+            last = current;
+            current = current->next;
+            drop = false;
         }
         countOp++;
-        if (current == first && found) {
-            found = false;
-            proceed = true;
-        } else if (current == first && !found) {
-            proceed = false;
-        }
     }
-    return count;
+    if (length == 1) {
+        return 1;
+    }
+    countOp++;
+    return length;
 }
 
 int Train::getOpCount() {
