@@ -11,7 +11,6 @@ int Train::getLength() {
     while (current != first) {
       len++;
       current = current->next;
-      opCount++;
     }
   }
   opCount++;
@@ -29,7 +28,7 @@ void Train::addCage(bool light) {
     item->next = item;
     item->prev = item;
     first = item;
-    opCount += 5;
+    opCount += 6;
   } else {
     item->prev = first->prev;
     item->next = first;
@@ -47,9 +46,9 @@ Train::~Train() {
       Cage* tmp = current;
       current = current->next;
       delete tmp;
-      opCount++;
+      opCount += 4;
     }
     delete current;
-    opCount++;
+    opCount += 4;
   }
 }
