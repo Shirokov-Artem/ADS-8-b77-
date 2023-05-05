@@ -13,8 +13,9 @@ void Train::addCage(bool light) {
     first->prev = item;
   } else {
     first = item;
+    first->prev = item;
   }
-  opCount += 4;
+  this->opCount += 4;
 }
 
 int Train::getLength() {
