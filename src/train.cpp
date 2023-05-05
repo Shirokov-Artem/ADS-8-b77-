@@ -7,19 +7,18 @@ Train::Train() {
 }
 
 void Train::addCage(bool light) {
+    Cage* newCage = new Cage;
+    newCage->light = light;
     if (first == nullptr) {
-        first = new Cage;
-        first->next = first;
-        first->prev = first;
-        first->light = light;
+        newCage->next = newCage;
+        newCage->prev = newCage;
+        first = newCage;
     } else {
-        Cage* last = first->prev;
-        last->next = new Cage;
-        last->next->prev = last;
-        last = last->next;
-        last->next = first;
-        first->prev = last;
-        last->light = light;
+        Cage* lastCage = first->prev;
+        lastCage->next = newCage;
+        newCage->next = first;
+        newCage->prev = lastCage;
+        first->prev = newCage;
     }
 }
 
@@ -27,27 +26,31 @@ int Train::getLength() {
     if (first == nullptr) {
         return 0;
     }
-    int maxLength = 0;
-    Cage *cur = first;
-    do {
-        int currentLength = 0;
-        Cage *startCage = cur;
-        while (cur->light == false) {
-            cur = cur->next;
-            currentLength++;
-        }
-        if (currentLength > maxLength) {
-            maxLength = currentLength;
-        }
-        while (cur != startCage && cur->light == true) {
-            cur->light = false;
-            cur = cur->prev;
-            countOp++;
-        }
-    } while (cur->next != first);
-    return maxLength;
+    int count = 1;
+    Cage* currentCage = first->next;
+
+    while (currentCage != first) {
+        count++;
+        currentCage = currentCage->next;
+    }
+    return count;
 }
 
 int Train::getOpCount() {
+    if (first == nullptr) {
+        return 0;
+    }
+    Cage* currentCage = first->next;
+    int count = 2;
+    while (currentCage != first) {
+        if (!currentCage->light) {
+            countOp += count;
+            currentCage->light = true;
+            count = 2;
+        }
+        count++;
+        currentCage = currentCage->next;
+    }
+    countOp += count;
     return countOp;
 }
