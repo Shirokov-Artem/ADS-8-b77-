@@ -34,7 +34,20 @@ int Train::getLength() {
 }
 
 int Train::getOpCount() {
-  return opCount;
+  if (first == nullptr) {
+    return 0;
+  } else {
+    Cage* current = first;
+    int opCount = 0;
+    do {
+      if (current->light && current->next->light) {
+        opCount++;
+        current = current->next;
+      }
+      current = current->next;
+    } while (current != first);
+    return opCount;
+  }
 }
 
 Train::~Train() {
