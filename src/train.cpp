@@ -32,16 +32,16 @@ int Train::getLength() {
         if (curCage != nullptr) {
             if (curCage->light) {
                 if (isMovL) {
-                    if (curCage->prev == nullptr) {
-                        curCage = nullptr;
-                    } else {
+                    if (curCage->prev != nullptr) {
                         curCage = curCage->prev->prev;
+                    } else {
+                        curCage = nullptr;
                     }
                 } else {
-                    if (curCage->next == nullptr) {
-                        curCage = nullptr;
-                    } else {
+                    if (curCage->next != nullptr) {
                         curCage = curCage->next->next;
+                    } else {
+                        curCage = nullptr;
                     }
                 }
                 isMovL = !isMovL;
