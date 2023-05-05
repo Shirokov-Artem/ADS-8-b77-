@@ -3,8 +3,6 @@
 
 Train::Train() : countOp(0), first(nullptr) {}
 
-Train::Train() : countOp(0), first(nullptr) {}
-
 void Train::addCage(bool light) {
     if (first == nullptr) {
         first = new Cage;
