@@ -1,7 +1,7 @@
 // Copyright 2021 NNTU-CS
 #include "train.h"
 
-Train::Train() : countOp(0), opCount(0), first(nullptr) {}
+Train::Train() : opCount(0), first(nullptr) {}
 
 void Train::addCage(bool light) {
   Cage* item = new Cage;
@@ -56,7 +56,7 @@ int Train::getLength() {
 int Train::getOpCount() {
   int count = 0;
   getLength();
-  count = countOp;
-  countOp = 0;
+  count = opCount;
+  opCount = 0;
   return count;
 }
