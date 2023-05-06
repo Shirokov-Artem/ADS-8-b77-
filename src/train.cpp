@@ -25,7 +25,7 @@ int Train::getLength() {
     countOp = 0;
     Cage *curr = first;
     do {
-        if (curr->light == true) {
+        if (curr->light == true) { 
             curr = curr->next;
             countOp++;
             break;
@@ -33,13 +33,13 @@ int Train::getLength() {
         curr = curr->next;
         countOp++;
     } while (curr != first);
-
     Cage *start = curr;
     int length = 0;
     do {
         if (curr->light == true) {
             start = curr;
             length = 1;
+            curr->light = false;
         } else {
             length++;
         }
@@ -53,17 +53,18 @@ int Train::getOpCount() {
     if (countOp == 0) {
         countOp++;
         Cage *curr = first;
-        while (curr->light != true) {
+        bool found = false;
+        do {
+            if (curr->light == true) {
+                curr->light = false;
+                found = true;
+            }
             curr = curr->next;
             countOp++;
+        } while (curr != first);
+        if (found) {
+            getLength();
         }
-        curr->light = false;
-        while (curr->light != true) {
-            curr = curr->next;
-            countOp++;
-        }
-        curr->light = false;
-        getLength();
     }
     return countOp;
 }
