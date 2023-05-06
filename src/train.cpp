@@ -25,7 +25,7 @@ int Train::getLength() {
     countOp = 0;
     Cage *curr = first;
     do {
-        if (curr->light == true) { 
+        if (curr->light == true) {
             curr = curr->next;
             countOp++;
             break;
