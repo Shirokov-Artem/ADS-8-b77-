@@ -1,7 +1,7 @@
 // Copyright 2021 NNTU-CS
 #include "train.h"
 
-Train::Train() : first(nullptr), opCount(-1) {}
+Train::Train() : first(nullptr), countOp(-1) {}
 
 void Train::addCage(bool light) {
   Cage* newCage = new Cage{light, nullptr, nullptr};
@@ -26,17 +26,17 @@ int Train::getLength() {
     bool flag = false;
     while (!flag || currentCage != first) {
       flag = true;
-      ++opCount;
+      ++countOp;
       if (!currentCage->light) {
         ++len;
         currentCage = currentCage->next;
-      } else { // вагон с фонариком
+      } else {
         Cage* moveCage = currentCage->prev;
         for (int i = 0; i < len - 1; ++i) {
-          ++opCount;
+          ++countOp;
           moveCage = moveCage->prev;
         }
-        ++opCount;
+        ++countOp;
         if (moveCage == first) {
           break;
         } else {
@@ -51,10 +51,10 @@ int Train::getLength() {
 }
 
 int Train::getOpCount() {
-  if (opCount > -1) {
-    return opCount;
+  if (countOp > -1) {
+    return countOp;
   } else {
     getLength();
-    return opCount;
+    return countOp;
   }
 }
