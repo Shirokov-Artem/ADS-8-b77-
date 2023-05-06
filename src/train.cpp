@@ -1,52 +1,56 @@
 // Copyright 2021 NNTU-CS
 #include "train.h"
 
-Train::Train() : countOp(0), first(nullptr) {}
+Train::Train() : first(nullptr), countOp(0) {}
 
 void Train::addCage(bool light) {
-    if (first == nullptr) {
-        first = new Cage{light, nullptr, nullptr};
-        first->next = first->prev = first;
+    Cage* item = new Cage;
+    item->light = light;
+    item->next = item->prev = item;
+
+    if(first == nullptr) {
+        first = item;
     } else {
-        Cage* prevLastCage = first->prev;
-        prevLastCage->next = new Cage{ light, first, prevLastCage };
-        first->prev = prevLastCage->next;
+        item->prev = first->prev;
+        item->next = first;
+        first->prev->next = item;
+        first->prev = item;
+        first = item;
     }
 }
 
 int Train::getLength() {
-    if (countOp == 0) {
-        if (first == nullptr) {
-            return 0;
-        }
-        int length = 0;
-        Cage* currentCage = first;
-        do {
-            if (!currentCage->light) {
-                length++;
-            } else {
-                Cage* prevCage = currentCage->prev;
-                int i = length - 1;
-                while (i--) {
-                    prevCage = prevCage->prev;
-                    countOp++;
-                }
-                if (prevCage == first->prev) {
-                    break;
-                }
-                length = 1;
-                currentCage = prevCage->next;
-            }
-            currentCage = currentCage->next;
-        } while (currentCage != first);
-        countOp += length;
-        return length;
-    } else {
-        return countOp;
+    if(first == nullptr) {
+        return 0;
     }
+    int CageC = 0;
+    bool curState = true;
+    Cage* curCage = first;
+
+    do {
+        curState = curCage->light;
+        curCage = curCage->next;
+        CageC++;
+
+        while(curCage->light != curState) {
+            curCage = curCage->next;
+            countOp++;
+        }
+
+        countOp++;
+        curCage->light = !curState;
+        curCage = curCage->prev;
+
+        while(curCage != first) {
+            curCage = curCage->prev;
+            countOp++;
+        }
+        countOp++;
+    } while(curCage != first);
+
+    return CageC;
 }
 
 int Train::getOpCount() {
-    getLength();
     return countOp;
 }
