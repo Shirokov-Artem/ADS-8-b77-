@@ -27,7 +27,7 @@ int Train::getLength() {
           currentCage = currentCage->next;
         } else {
           int steps = length - 1;
-          Cage* prevCage = currentCage;
+          Cage* prevCage = currentCage->prev;
           while (steps--) {
             countOp++;
             prevCage = prevCage->prev;
