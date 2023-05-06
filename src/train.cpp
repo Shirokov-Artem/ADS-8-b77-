@@ -54,11 +54,9 @@ int Train::getOpCount() {
             do {
                 if (curr->light && curr->next->light) {
                     curr->light = false;
-                }
-                if (curr->light && !curr->next->light) {
-                    curr = curr->next;
-                } else {
                     curr = curr->next->next;
+                } else {
+                    curr = curr->next;
                 }
                 countOp++;
             } while (curr != first);
