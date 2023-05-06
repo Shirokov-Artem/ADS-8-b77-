@@ -33,8 +33,12 @@ int Train::getLength() {
             currLength = 0;
         }
         Cage *it = curr->next;
-        while (it != first && it->light == true) {
-            currLength++;
+        while (it != curr) {
+            if (it->light == true) {
+                currLength++;
+            } else {
+                break;
+            }
             it = it->next;
         }
         if (currLength > maxLength) {
@@ -51,12 +55,16 @@ int Train::getOpCount() {
         countOp = 0;
         if (first != nullptr) {
             Cage *curr = first;
+            Cage *next = curr->next;
             do {
-                if (curr->light && curr->next->light) {
+                if (curr->light && next->light) {
                     curr->light = false;
-                    curr = curr->next->next;
+                    next->light = false;
+                    curr = curr->prev;
+                    next = curr->next;
                 } else {
-                    curr = curr->next;
+                    curr = next;
+                    next = curr->next;
                 }
                 countOp++;
             } while (curr != first);
