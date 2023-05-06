@@ -51,19 +51,21 @@ int Train::getLength() {
 
 int Train::getOpCount() {
     if (countOp == 0) {
-        countOp++;
         Cage *curr = first;
-        while (curr->light != true) {
-            curr = curr->next;
-            countOp++;
-        }
-        curr->light = false;
-        while (curr->light != true) {
-            curr = curr->next;
-            countOp++;
-        }
-        curr->light = false;
-        getLength();
+        do {
+            if (curr->light) {
+                curr->light = false;
+                curr = curr->next;
+                continue;
+            }
+            if (!curr->next->light) {
+                curr = curr->next;
+            } else {
+               curr = curr->next;
+               curr->light = false;
+            }
+        } while (curr != first);
+        countOp = getLength();
     }
     return countOp;
 }
