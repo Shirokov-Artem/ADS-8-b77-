@@ -23,51 +23,45 @@ int Train::getLength() {
     if (first == nullptr)
         return 0;
     countOp = 0;
-    int maxLength = 0;
-    int currLength = 0;
-    Cage *curr = first;
+    int maxLen = 0;
+    int currLen = 0;
+    Cage *currCage = first;
     do {
-        if (curr->light == true) {
-            currLength = 1;
-        } else {
-            currLength = 0;
-        }
-        Cage *it = curr->next;
-        while (it != curr) {
-            if (it->light == true) {
-                currLength++;
-            } else {
-                break;
+        if (currCage->light == true) {
+            currLen = 1;
+            Cage *nextCage = currCage->next;
+            while (nextCage != currCage && nextCage->light == true) {
+                currLen += 1;
+                nextCage = nextCage->next;
             }
-            it = it->next;
+            if (currLen > maxLen)
+                maxLen = currLen;
         }
-        if (currLength > maxLength) {
-            maxLength = currLength;
-        }
-        curr = curr->next;
-        countOp++;
-    } while (curr != first);
-    return maxLength;
+        currCage = currCage->next;
+    } while (currCage != first);
+    return maxLen;
 }
 
 int Train::getOpCount() {
     if (countOp == 0) {
         countOp = 0;
         if (first != nullptr) {
-            Cage *curr = first;
-            Cage *next = curr->next;
+            Cage *currCage = first;
             do {
-                if (curr->light && next->light) {
-                    curr->light = false;
-                    next->light = false;
-                    curr = curr->prev;
-                    next = curr->next;
+                if (currCage->light == true && currCage->next->light == true) {
+                    currCage->light = false;
+                    currCage->next->light = false;
+                    countOp += 2;
+                    if (currCage->prev == currCage) {
+                        currCage = currCage->next;
+                    } else {
+                        currCage = currCage->prev;
+                    }
                 } else {
-                    curr = next;
-                    next = curr->next;
+                    currCage = currCage->next;
+                    countOp += 1;
                 }
-                countOp++;
-            } while (curr != first);
+            } while (currCage != first);
         }
     }
     return countOp;
