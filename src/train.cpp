@@ -47,6 +47,11 @@ int Train::getLength() {
         curr = curr->next;
         countOp++;
     } while (curr != start && !exit);
+    Cage *temp = start;
+    while (temp != curr) {
+        temp->light = false;
+        temp = temp->next;
+    }
     return length;
 }
 
