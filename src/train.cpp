@@ -24,42 +24,46 @@ int Train::getLength() {
         return 0;
     countOp = 0;
     Cage *curr = first;
-    Cage *start = nullptr;
-    int length = 1;
     do {
         if (curr->light == true) {
-            curr->light = false;
-            length++;
-            if (start == nullptr)
-                start = curr;
-        }
-        if (curr != first && curr->next->light == true && curr != start)
             curr = curr->next;
-        else
-            curr = curr->next->light == true ? curr->next : curr;
+            countOp++;
+            break;
+        }
+        curr = curr->next;
         countOp++;
     } while (curr != first);
+
+    Cage *start = curr;
+    int length = 0;
+    do {
+        if (curr->light == true) {
+            start = curr;
+            length = 1;
+        } else {
+            length++;
+        }
+        curr = curr->next;
+        countOp++;
+    } while (curr != first && curr != start);
     return length;
 }
 
 int Train::getOpCount() {
     if (countOp == 0) {
+        countOp++;
         Cage *curr = first;
-        bool found = false;
-        do {
-            if (curr->light == true) {
-                curr->light = false;
-                found = true;
-            }
+        while (curr->light != true) {
             curr = curr->next;
             countOp++;
-        } while (curr != first);
-        if (found) {
-            int len = getLength();
-            countOp += len + 1;
-        } else {
-            countOp += getLength();
         }
+        curr->light = false;
+        while (curr->light != true) {
+            curr = curr->next;
+            countOp++;
+        }
+        curr->light = false;
+        getLength();
     }
     return countOp;
 }
