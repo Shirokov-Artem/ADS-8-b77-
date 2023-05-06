@@ -3,56 +3,57 @@
 
 Train::Train() : first(nullptr), countOp(0) {}
 
-void Train::addCage(bool light) {
-    Cage *cage = new Cage{light, nullptr, nullptr};
+int Train::countLength() const {
+    int length = 0;
     if (first == nullptr) {
-        first = cage;
+        return length;
+    }
+    length++;
+    Cage* curr = first->next;
+    while (curr != first) {
+        ++length;
+        curr = curr->next;
+    }
+    return length;
+}
+
+void Train::addCage(bool light) {
+    auto* newCage = new Cage(light, nullptr, nullptr);
+    if (first == nullptr) {
+        first = newCage;
         first->next = first;
         first->prev = first;
     } else {
-        Cage *last = first->prev;
-        last->next = cage;
-        cage->prev = last;
-        cage->next = first;
-        first->prev = cage;
+        Cage* last = first->prev;
+        last->next = newCage;
+        newCage->prev = last;
+        newCage->next = first;
+        first->prev = newCage;
     }
     countOp = 0;
 }
 
 int Train::getLength() {
-    if (first == nullptr)
-        return 0;
-    countOp = 0;
-    Cage *curr = first;
-    do {
-        if (curr->light == true) {
-            curr = curr->next;
-            countOp++;
-            break;
-        }
-        curr = curr->next;
-        countOp++;
-    } while (curr != first);
-
-    Cage *start = curr;
     int length = 0;
+    if (first == nullptr) {
+        return length;
+    }
+    Cage* curr = first;
     do {
-        if (curr->light == true) {
-            start = curr;
-            length = 1;
-        } else {
-            length++;
+        if (curr->light) {
+            ++length;
         }
+        ++length;
         curr = curr->next;
-        countOp++;
-    } while (curr != first && curr != start);
+    } while (curr != first);
+    length--;
     return length;
 }
 
 int Train::getOpCount() {
     if (countOp == 0) {
-        Cage *curr = first;
-        int length = getLength();
+        Cage* curr = first;
+        int length = countLength();
         do {
             if (curr->light) {
                 curr->light = false;
