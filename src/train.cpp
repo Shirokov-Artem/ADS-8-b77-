@@ -22,7 +22,7 @@ void Train::addCage(bool light) {
 int Train::getLength() {
     if (first == nullptr)
         return 0;
-    if (first == last && first->light == true)
+    if (first == first->prev && first->light == true)
         return 1;
     countOp = 0;
     Cage *curr = first;
