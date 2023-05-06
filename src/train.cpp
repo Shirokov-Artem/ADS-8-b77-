@@ -52,6 +52,7 @@ int Train::getLength() {
 int Train::getOpCount() {
     if (countOp == 0) {
         Cage *curr = first;
+        int length = getLength();
         do {
             if (curr->light) {
                 curr->light = false;
@@ -61,11 +62,11 @@ int Train::getOpCount() {
             if (!curr->next->light) {
                 curr = curr->next;
             } else {
-               curr = curr->next;
-               curr->light = false;
+                curr = curr->next;
+                curr->light = false;
             }
         } while (curr != first);
-        countOp = getLength();
+        countOp = length;
     }
     return countOp;
 }
