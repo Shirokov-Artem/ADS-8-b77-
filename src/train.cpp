@@ -4,58 +4,65 @@
 Train::Train() : first(nullptr), countOp(0) {}
 
 void Train::addCage(bool light) {
-    auto* newCage = new Cage(light, nullptr, nullptr);
+    Cage *cage = new Cage{light, nullptr, nullptr};
     if (first == nullptr) {
-        first = newCage;
+        first = cage;
         first->next = first;
         first->prev = first;
     } else {
-        Cage* last = first->prev;
-        last->next = newCage;
-        newCage->prev = last;
-        newCage->next = first;
-        first->prev = newCage;
+        Cage *last = first->prev;
+        last->next = cage;
+        cage->prev = last;
+        cage->next = first;
+        first->prev = cage;
     }
-    ++length;
     countOp = 0;
 }
 
 int Train::getLength() {
-    int length = 0;
-    if (first == nullptr) {
-        return length;
-    }
-    Cage* curr = first;
+    if (first == nullptr)
+        return 0;
+    countOp = 0;
+    int maxLength = 0;
+    int currLength = 0;
+    Cage *curr = first;
     do {
-        if (curr->light) {
-            ++length;
+        if (curr->light == true) {
+            currLength = 1;
+        } else {
+            currLength = 0;
         }
-        ++length;
+        Cage *it = curr->next;
+        while (it != first && it->light == true) {
+            currLength++;
+            it = it->next;
+        }
+        if (currLength > maxLength) {
+            maxLength = currLength;
+        }
         curr = curr->next;
+        countOp++;
     } while (curr != first);
-    length--;
-    return length;
+    return maxLength;
 }
 
 int Train::getOpCount() {
     if (countOp == 0) {
-        Cage* curr = first;
-        bool isLight = false;
-        int count = 0;
-        while (count < length) {
-            if (curr->light) {
-                isLight = true;
-            } else if (isLight) {
-                curr->light = true;
+        countOp = 0;
+        if (first != nullptr) {
+            Cage *curr = first;
+            do {
+                if (curr->light && curr->next->light) {
+                    curr->light = false;
+                }
+                if (curr->light && !curr->next->light) {
+                    curr = curr->next;
+                } else {
+                    curr = curr->next->next;
+                }
                 countOp++;
-                isLight = false;
-            } else {
-                curr->light = false;
-            }
-            curr = curr->next;
-            count++;
+            } while (curr != first);
         }
-        countOp += length;
     }
     return countOp;
 }
