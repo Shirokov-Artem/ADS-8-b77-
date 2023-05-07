@@ -23,22 +23,19 @@ int Train::getLength() {
     if (first == nullptr) {
         return 0;
     }
+    Cage* end = first->prev;
+    Cage* curr = first;
     int length = 0;
-    bool currLight = first->light;
-    Cage* curr = first->next;
-    while (curr != first) {
-        if (curr->light != currLight) {
+    do {
+        if (curr->light != end->light) {
             length++;
-            currLight = curr->light;
         }
         curr = curr->next;
+        end = end->prev;
         countOp++;
-    }
-    if (currLight != first->light) {
-        length++;
-    }
+    } while (curr != first);
     countOp++;
-    return length;
+    return length + 1;
 }
 
 int Train::getOpCount() {
