@@ -14,6 +14,7 @@ void Train::addCage(bool light) {
     cage->prev = first->prev;
     first->prev->next = cage;
     first->prev = cage;
+    countOp++;
   }
 }
 
