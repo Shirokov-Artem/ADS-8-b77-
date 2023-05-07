@@ -1,46 +1,37 @@
 // Copyright 2021 NNTU-CS
 #include "train.h"
 
-Train::Train() : first(nullptr), countOp(0) {}
+Train::Train() : countOp(0), first(nullptr) {}
 
 void Train::addCage(bool light) {
     Cage* cage = new Cage{light};
-
-    if (first == nullptr){
+    if (first == nullptr) {
         first = cage;
-        first->prev = first->next = first;
+        first->next = cage;
+        first->prev = cage;
     } else {
-        cage->prev = first->prev;
         cage->next = first;
+        cage->prev = first->prev;
         first->prev->next = cage;
         first->prev = cage;
-
-        if (cage->prev->light != cage->light){
-            countOp += 2;
-        }
     }
 }
 
 int Train::getLength() {
-    if (first == nullptr){
-        return 0;
-    }
-
-    Cage* curCage = first->next;
+    int length = 0;
     bool curState = first->light;
-    int CageC = 1;
-
-    while (curCage != first){
-        if (curCage->light != curState){
+    Cage* curCage = first;
+    do {
+        if (curCage->light != curState) {
+            length++;
             curState = !curState;
-            countOp += 2;
         }
-
-        CageC++;
         curCage = curCage->next;
+    } while (curCage != first);
+    if (curState != first->light) {
+        length++;
     }
-
-    return CageC;
+    return length;
 }
 
 int Train::getOpCount() {
