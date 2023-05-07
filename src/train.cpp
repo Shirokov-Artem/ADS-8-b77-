@@ -21,21 +21,19 @@ void Train::addCage(bool light) {
 int Train::getLength() {
     if (first == nullptr) {
         return 0;
-    } else if (first->next == first) {
-        return 1;
-    }
-    int length = 1;
-    bool curState = first->light;
-    Cage* curCage = first->next;
-    do {
-        if (curCage->light != curState) {
-            curState = !curState;
-            length++;
+    } else {
+        bool curState = first->light;
+        Cage* curCage = first->next;
+        int length = 1;
+        while (curCage != first) {
+            if (curCage->light != curState) {
+                curState = curCage->light;
+                length++;
+            }
+            curCage = curCage->next;
         }
-        curCage = curCage->next;
-    } while (curCage != first);
-
-    return length;
+        return length;
+    }
 }
 
 int Train::getOpCount() {
