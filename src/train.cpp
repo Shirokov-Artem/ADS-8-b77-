@@ -4,35 +4,34 @@
 Train::Train() : first(nullptr), countOp(0) {}
 
 void Train::addCage(bool light) {
-    Cage* cage = new Cage{ light };
-
+    Cage* cage = new Cage{ light, nullptr, nullptr };
     if (first == nullptr) {
+        cage->prev = cage;
+        cage->next = cage;
         first = cage;
-        first->next = cage;
-        first->prev = cage;
     } else {
         cage->prev = first->prev;
         cage->next = first;
         first->prev->next = cage;
         first->prev = cage;
-        countOp++;
     }
 }
 
 int Train::getLength() {
     if (first == nullptr) {
         return 0;
-    } else {
-        Cage* curCage = first;
-        int length = 0;
-        do {
-            if (curCage->light != curCage->prev->light) {
-                length++;
-            }
-            curCage = curCage->next;
-        } while (curCage != first);
-        return length + 1;
     }
+    Cage* curCage = first;
+    bool light = curCage->light;
+    int length = 1;
+    do {
+        if (curCage->light != light) {
+            length++;
+            light = !light;
+        }
+        curCage = curCage->next;
+    } while (curCage != first);
+    return light ? length : length + 1;
 }
 
 int Train::getOpCount() {
