@@ -20,35 +20,51 @@ void Train::addCage(bool light) {
 }
 
 int Train::getLength() {
-    if (first == nullptr)
+    if (first == nullptr) {
         return 0;
-    countOp = 0;
-    Cage *curr = first;
-    do {
-        if (curr->light == true) {
-            curr = curr->next;
+    }
+    Cage* start = first;
+    if (!first->light) {
+        while (start->next != first && !start->next->light) {
+            start = start->next;
             countOp++;
+        }
+    }
+    int length = 0;
+    bool prevLight = first->light;
+    Cage* curr = first->next;
+    while (curr != first) {
+        if (prevLight != curr->light) {
+            length++;
+            prevLight = curr->light;
+        }
+        curr = curr->next;
+        if (curr == start) {
             break;
         }
-        curr = curr->next;
         countOp++;
-    } while (curr != first);
-    Cage *start = curr;
-    int length = 0;
-    do {
-        if (curr->light == true) {
-            start = curr;
-            length = 1;
-        } else {
+    }
+    if (prevLight != first->light) {
+        length++;
+    }
+    if (start != first) {
+        curr = start->next;
+        while (curr != first) {
+            if (prevLight != curr->light) {
+                length++;
+                prevLight = curr->light;
+            }
+            curr = curr->next;
+            countOp++;
+        }
+        if (prevLight != start->light) {
             length++;
         }
-        curr = curr->next;
-        countOp++;
-    } while (curr != first && curr != start);
+    }
+    countOp++;
     return length;
 }
 
 int Train::getOpCount() {
-    if (countOp == -1) getLength();
     return countOp;
 }
