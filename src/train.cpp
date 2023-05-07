@@ -10,8 +10,8 @@ void Train::addCage(bool light) {
         first->next = cage;
         first->prev = cage;
     } else {
-        cage->next = first;
         cage->prev = first->prev;
+        cage->next = first;
         first->prev->next = cage;
         first->prev = cage;
         countOp++;
@@ -22,12 +22,10 @@ int Train::getLength() {
     if (first == nullptr) {
         return 0;
     } else {
-        bool curState = first->light;
         Cage* curCage = first->next;
         int length = 1;
         while (curCage != first) {
-            if (curCage->light != curState) {
-                curState = curCage->light;
+            if (curCage->light != curCage->prev->light) {
                 length++;
             }
             curCage = curCage->next;
