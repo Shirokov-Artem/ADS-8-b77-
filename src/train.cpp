@@ -20,22 +20,32 @@ void Train::addCage(bool light) {
 }
 
 int Train::getLength() {
-    if (first == nullptr) {
-        return 0;
+    Cage* currentWagon = first;
+    if (!currentWagon->light) {
+        currentWagon->light = true;
     }
-    Cage* end = first->prev;
-    Cage* curr = first;
-    int length = 0;
-    do {
-        if (curr->light != end->light) {
-            length++;
-        }
-        curr = curr->next;
-        end = end->prev;
+    int result = 0;
+    int wagonCount = 0;
+    while (true) {
+        currentWagon = currentWagon->next;
         countOp++;
-    } while (curr != first);
-    countOp++;
-    return length + 1;
+        wagonCount++;
+        while (!currentWagon->light) {
+            currentWagon = currentWagon->next;
+            countOp++;
+            wagonCount++;
+        }
+        currentWagon->light = false;
+        result = wagonCount;
+        while (wagonCount > 0) {
+            countOp++;
+            wagonCount--;
+            currentWagon = currentWagon->prev;
+        }
+        if (!currentWagon->light) {
+            return result;
+        }
+    }
 }
 
 int Train::getOpCount() {
