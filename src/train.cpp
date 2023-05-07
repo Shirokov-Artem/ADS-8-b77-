@@ -21,17 +21,17 @@ int Train::getLength() {
     if (first == nullptr) {
         return 0;
     }
-    Cage* curCage = first;
-    bool light = curCage->light;
+    Cage* curCage = first->next;
+    bool light = first->light;
     int length = 1;
-    do {
+    while (curCage != first) {
         if (curCage->light != light) {
             length++;
             light = !light;
         }
         curCage = curCage->next;
-    } while (curCage != first);
-    return light ? length : length + 1;
+    }
+    return length;
 }
 
 int Train::getOpCount() {
